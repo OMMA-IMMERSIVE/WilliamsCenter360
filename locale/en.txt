@@ -1,6 +1,35 @@
 #: locale=en
 
+## Action
+
+### URL
+LinkBehaviour_E29D5ECE_C298_D6E7_41CC_929557EC4C21.source = https://github.com/OMMA-IMMERSIVE/WilliamsCenter360/issues
+
+## Hotspot
+
+### Text
+HotspotPanoramaOverlayTextImage_E3426F1F_C29B_B765_41E5_90001DE02564.text = Bugs & Feedback
+HotspotPanoramaOverlayTextImage_FDFADDFD_C289_5AA5_41D1_75DE4E770B89.text = Changelog: \
+–Added Spring Hall, Black Box, Rivoli \
+-Basic Tour Menu \
+-Added Basic Redevelopment Mode \
+ \
+Todo: \
+-Basement/backstage/outside \
+-Simplified Splat
+HotspotPanoramaOverlayTextImage_FE78471D_C288_D765_41E5_E0534148C949.text = Gaussian Splat V1
+HotspotPanoramaOverlayTextImage_FC4CA01A_C29B_496F_4182_84EDA83A8D1C.text = Internal 360 Tour \
+V0.1
+HotspotPanoramaOverlayTextImage_FEA02567_C289_CBA5_41E0_6EFE106A174A.text = Redevelopment Model
+
 ## Media
+
+### Image
+imlevel_EFB31B98_C288_BF6B_41E1_217802C0EE9F.url = media/panorama_C546D2DD_C38B_CEE5_41DA_A9FCE0AFBD30_HS_d39ke0bj_en.webp
+imlevel_E9300ABD_C288_BEA5_41D8_3021C699308F.url = media/panorama_C546D2DD_C38B_CEE5_41DA_A9FCE0AFBD30_HS_hzz8kged_en.webp
+imlevel_E9F97211_C287_497D_41E6_07AABBBD876B.url = media/panorama_C546D2DD_C38B_CEE5_41DA_A9FCE0AFBD30_HS_p36km1sz_en.webp
+imlevel_9545883C_C288_B9AB_41E4_55AAF80A575A.url = media/panorama_C546D2DD_C38B_CEE5_41DA_A9FCE0AFBD30_HS_uy3a4x23_en.webp
+imlevel_EFB16B4B_C288_BFED_41E6_3F28C357C477.url = media/panorama_C546D2DD_C38B_CEE5_41DA_A9FCE0AFBD30_HS_wl4iew9n_en.webp
 
 ### Title
 panorama_C546D2DD_C38B_CEE5_41DA_A9FCE0AFBD30.label = Atrium
@@ -52,7 +81,16 @@ panorama_F2B226AB_C28F_D6AD_41D2_AA38495A08B3.label = Rivoli
 panorama_CDEF7C78_C3B9_59AB_41D1_015C5B581129.label = Soldato
 panorama_CB4C878B_C389_776D_41CE_AFE6AAEA2E37.label = Soldato_HVAC
 panorama_C9544690_C389_497B_41C3_4F46BA403B89.label = Spring Hall
+model_FF627AE1_C28F_5EDD_41E3_14EAEBFC0869.label = WC_Redevelopment
 model_AC9607A3_BC0D_646A_41B0_65AAE9C4CA64.label = WC_SPLAT_V1_CROPPED
+
+## Skin
+
+### Button
+Button_E78328BF_C299_7AA5_4184_16C3A1DC6FD0.label = HOME
+
+### Dropdown
+DropDown_F0666ED2_C378_D6FF_41CD_19D418B8EC49.prompt = Locations
 
 ## Tour
 
