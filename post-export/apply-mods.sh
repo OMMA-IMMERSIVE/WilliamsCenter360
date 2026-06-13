@@ -4,7 +4,7 @@ set -eu
 export LC_ALL=C
 
 ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
-EXPORT_DIR="${1:-$ROOT_DIR/WC360}"
+EXPORT_DIR="${1:-$ROOT_DIR}"
 INDEX_FILE="$EXPORT_DIR/index.htm"
 CUSTOM_DIR="$EXPORT_DIR/custom"
 FIREFOX_WEBGL_SOURCE="$ROOT_DIR/post-export/assets/firefox-webgl-context.js"
