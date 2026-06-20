@@ -61,3 +61,10 @@ This directory records changes that should be re-applied after exporting the tou
 - Behavior: automatically starts on page load and triggers each menu item's rollover state in sequence every 5 seconds, which reuses the exported hover behavior that changes the active item to gold/yellow and plays the preview video in viewer 2. Before advancing, it explicitly resets the previous active item and every other menu item so only the currently playing preview stays highlighted.
 - User interaction: trusted pointer/mouse/focus entry on any menu item stops the cycle, keeps the hovered item active, and resets the other buttons. Pointer/mouse/focus exit starts the cycle again after 5 seconds, continuing from the hovered item. Touch starts the same pause and schedules a 5-second restart.
 - Reason: creates an ambient menu preview loop without editing generated `script_general.js`.
+
+### `video-cover`
+
+- Runtime files added: `custom/wc360-video-cover.js`.
+- Injection point: `index.htm`, immediately after `custom/wc360-responsive-menu.js`.
+- Behavior: sets every 3DVista `Video` object's scale mode to `fit_outside`, preserving aspect ratio while filling the viewer and cropping the overflowing axis. Native video elements receive equivalent `object-fit: cover` styling.
+- Reason: keeps preview videos edge-to-edge at every viewport aspect ratio without stretching them or editing generated tour definitions.
