@@ -1,59 +1,109 @@
 (function () {
-  var STYLE_ID = "wc360-video-cover-style";
-  var SCALE_MODE_COVER = "fit_outside";
+  "use strict";
 
-  function injectStyle() {
-    if (document.getElementById(STYLE_ID)) {
+  var STATIC_VIDEO_ID = "video_FEF1B6B4_E5E9_871D_41CA_8E30EADCF75C";
+  var state = false;
+  var hideTimer = null;
+
+  function getTourPlayer() {
+    return window.tour && window.tour.player && window.tour.player.getById ? window.tour.player : null;
+  }
+
+  function getStaticVideoMedia() {
+    var player = getTourPlayer();
+
+    if (!player) {
+      return null;
+    }
+
+    return player.getById(STATIC_VIDEO_ID);
+  }
+
+  function getStaticVideoPlayer() {
+    var player = getTourPlayer();
+    var media = getStaticVideoMedia();
+    var players;
+    var i;
+    var currentPlayer;
+
+    if (!player || !media) {
+      return null;
+    }
+
+    if (player.getCurrentPlayerWithMedia) {
+      currentPlayer = player.getCurrentPlayerWithMedia(media);
+
+      if (currentPlayer) {
+        return currentPlayer;
+      }
+    }
+
+    if (player.getByClassName) {
+      players = player.getByClassName("VideoPlayer");
+
+      for (i = 0; i < players.length; i += 1) {
+        if (players[i] && players[i].get && players[i].get("video") === media) {
+          return players[i];
+        }
+      }
+    }
+
+    return null;
+  }
+
+  function setPlayerState(visible) {
+    var player = getStaticVideoPlayer();
+
+    state = !!visible;
+    window.WC360_STATIC_VIDEO_VISIBLE = state;
+
+    if (!player || !player.set) {
       return;
     }
 
-    var style = document.createElement("style");
-    style.id = STYLE_ID;
-    style.textContent = [
-      "#viewer video, #preloadContainer video {",
-      "  width: 100% !important;",
-      "  height: 100% !important;",
-      "  min-width: 100% !important;",
-      "  min-height: 100% !important;",
-      "  object-fit: cover !important;",
-      "  object-position: center center !important;",
-      "}"
-    ].join("\n");
-    document.head.appendChild(style);
-  }
+    player.set("visible", state);
+    player.set("enabled", state);
 
-  function applyVideoCover() {
-    if (!window.tour || !window.tour.player || !window.tour.player.getByClassName) {
-      return 0;
+    if (!state && player.pause) {
+      player.pause();
     }
 
-    var videos = window.tour.player.getByClassName("Video") || [];
-
-    videos.forEach(function (video) {
-      if (video && video.set && video.get("scaleMode") !== SCALE_MODE_COVER) {
-        video.set("scaleMode", SCALE_MODE_COVER);
-      }
-    });
-
-    return videos.length;
+    if (!state && player.stop) {
+      player.stop();
+    }
   }
 
-  function start() {
+  function toggle() {
+    setPlayerState(!state);
+  }
+
+  function startHiding() {
     var attempts = 0;
 
-    injectStyle();
+    if (hideTimer) {
+      window.clearInterval(hideTimer);
+    }
 
-    var timer = window.setInterval(function () {
+    hideTimer = window.setInterval(function () {
       attempts += 1;
+      setPlayerState(false);
 
-      if (applyVideoCover() > 0 || attempts >= 240) {
-        window.clearInterval(timer);
+      if (getStaticVideoPlayer() || attempts >= 80) {
+        window.clearInterval(hideTimer);
+        hideTimer = null;
       }
     }, 250);
   }
 
+  function start() {
+    window.WC360_STATIC_VIDEO_SET = setPlayerState;
+    window.WC360_STATIC_VIDEO_TOGGLE = toggle;
+
+    startHiding();
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start);
+    document.addEventListener("DOMContentLoaded", start, { once: true });
   } else {
     start();
   }

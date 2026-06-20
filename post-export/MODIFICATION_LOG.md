@@ -32,9 +32,9 @@ This directory records changes that should be re-applied after exporting the tou
 
 ### `vhs-effect`
 
-- Status: inactive.
-- The assets remain in `post-export/assets/`, but `apply-mods.sh` no longer copies or injects them.
-- The script still removes any old `WC360_POST_EXPORT:vhs-effect` block from `index.htm` after export.
+- Status: removed from the export path.
+- The old VHS overlay assets remain in `post-export/assets/` for reference, but `apply-mods.sh` no longer copies or injects them.
+- Reason: the previous implementation was too much moving machinery for the current goal. We’re keeping only the static-video visibility toggle.
 
 ### `url-mode-wrapper`
 
@@ -43,6 +43,9 @@ This directory records changes that should be re-applied after exporting the tou
 - Behavior: reads `wc360Mode` or `mode` from the query string/hash and exposes it as `window.WC360_MODE` plus `data-wc360-mode` attributes.
 - Default behavior: root/full mode hides the secondary preview viewer, TV border image, and nine venue buttons, leaving the dropdown menu available.
 - Embedded behavior: `/embed/` loads the tour with `wc360Mode=embedded`, preserving the TV preview, venue buttons, responsive layout, and auto-rotation.
+- The `/embed/` route is a tiny iframe wrapper that loads `../index.htm?wc360Mode=embedded&embedVersion=1`.
+- Full-mode autoplay now retries the Atrium start path instead of relying on a single trigger call.
+- The static overlay video (`video_FEF1B6B4_E5E9_871D_41CA_8E30EADCF75C`) is rendered at reduced opacity so the viewer can show through it.
 - Reason: supports separate dropdown-only and embedded experiences while keeping one 3DVista export.
 - The per-mode hide/remove lists are intentionally configured in `custom/wc360-mode.js` rather than in generated 3DVista files.
 
@@ -68,5 +71,5 @@ This directory records changes that should be re-applied after exporting the tou
 
 - Runtime files added: `custom/wc360-video-cover.js`.
 - Injection point: `index.htm`, immediately after `custom/wc360-responsive-menu.js`.
-- Behavior: sets every 3DVista `Video` object's scale mode to `fit_outside`, preserving aspect ratio while filling the viewer and cropping the overflowing axis. Native video elements receive equivalent `object-fit: cover` styling.
-- Reason: keeps preview videos edge-to-edge at every viewport aspect ratio without stretching them or editing generated tour definitions.
+- Behavior: listens for `V` and toggles the visibility of the static overlay video with id `video_FEF1B6B4_E5E9_871D_41CA_8E30EADCF75C`. It also exposes `window.WC360_STATIC_VIDEO_SET()` and `window.WC360_STATIC_VIDEO_TOGGLE()` for debugging.
+- Reason: keep the static clip controllable without reintroducing the larger overlay system.
