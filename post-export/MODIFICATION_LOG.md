@@ -41,7 +41,9 @@ This directory records changes that should be re-applied after exporting the tou
 - Runtime files added: `custom/wc360-mode.js`.
 - Injection point: `index.htm`, immediately after `script.js`.
 - Behavior: reads `wc360Mode` or `mode` from the query string/hash and exposes it as `window.WC360_MODE` plus `data-wc360-mode` attributes.
-- Reason: supports separate full and embedded URL wrappers while keeping one 3DVista export.
+- Default behavior: root/full mode hides the secondary preview viewer, TV border image, and nine venue buttons, leaving the dropdown menu available.
+- Embedded behavior: `/embed/` loads the tour with `wc360Mode=embedded`, preserving the TV preview, venue buttons, responsive layout, and auto-rotation.
+- Reason: supports separate dropdown-only and embedded experiences while keeping one 3DVista export.
 - The per-mode hide/remove lists are intentionally configured in `custom/wc360-mode.js` rather than in generated 3DVista files.
 
 ### `responsive-embed-menu`

@@ -1,4 +1,8 @@
 (function () {
+  if (window.WC360_MODE && window.WC360_MODE !== "embedded") {
+    return;
+  }
+
   var TOP_GRID_IDS = [
     "Button_8ABCDA12_B819_62B3_41D2_F34BF4720F6A",
     "Button_8837140B_B819_A691_41D6_D10830F52B94",
