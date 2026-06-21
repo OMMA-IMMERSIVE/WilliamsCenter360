@@ -34,7 +34,7 @@ This directory records changes that should be re-applied after exporting the tou
 
 - Status: removed from the export path.
 - The old VHS overlay assets remain in `post-export/assets/` for reference, but `apply-mods.sh` no longer copies or injects them.
-- Reason: the previous implementation was too much moving machinery for the current goal. We’re keeping only the static-video visibility toggle.
+- Reason: the previous implementation was too much moving machinery and is not part of the current export path.
 
 ### `url-mode-wrapper`
 
@@ -45,7 +45,6 @@ This directory records changes that should be re-applied after exporting the tou
 - Embedded behavior: `/embed/` loads the tour with `wc360Mode=embedded`, preserving the TV preview, venue buttons, responsive layout, and auto-rotation.
 - The `/embed/` route is a tiny iframe wrapper that loads `../index.htm?wc360Mode=embedded&embedVersion=1`.
 - Full-mode autoplay now retries the Atrium start path instead of relying on a single trigger call.
-- The static overlay video (`video_FEF1B6B4_E5E9_871D_41CA_8E30EADCF75C`) is rendered at reduced opacity so the viewer can show through it.
 - Reason: supports separate dropdown-only and embedded experiences while keeping one 3DVista export.
 - The per-mode hide/remove lists are intentionally configured in `custom/wc360-mode.js` rather than in generated 3DVista files.
 
@@ -66,10 +65,3 @@ This directory records changes that should be re-applied after exporting the tou
 - Behavior: automatically starts on page load and triggers each menu item's rollover state in sequence every 5 seconds, which reuses the exported hover behavior that changes the active item to gold/yellow and plays the preview video in viewer 2. Before advancing, it explicitly resets the previous active item and every other menu item so only the currently playing preview stays highlighted.
 - User interaction: trusted pointer/mouse/focus entry on any menu item stops the cycle, keeps the hovered item active, and resets the other buttons. Pointer/mouse/focus exit starts the cycle again after 5 seconds, continuing from the hovered item. Touch starts the same pause and schedules a 5-second restart.
 - Reason: creates an ambient menu preview loop without editing generated `script_general.js`.
-
-### `video-cover`
-
-- Runtime files added: `custom/wc360-video-cover.js`.
-- Injection point: `index.htm`, immediately after `custom/wc360-responsive-menu.js`.
-- Behavior: listens for `V` and toggles the visibility of the static overlay video with id `video_FEF1B6B4_E5E9_871D_41CA_8E30EADCF75C`. It also exposes `window.WC360_STATIC_VIDEO_SET()` and `window.WC360_STATIC_VIDEO_TOGGLE()` for debugging.
-- Reason: keep the static clip controllable without reintroducing the larger overlay system.
