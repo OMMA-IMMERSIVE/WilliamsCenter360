@@ -26,6 +26,7 @@ fi
 mkdir -p "$CUSTOM_DIR"
 mkdir -p "$EXPORT_DIR/embed"
 
+perl -0pi -e 's#<title>.*?</title>#<title>WC360</title>#s' "$INDEX_FILE"
 perl -0pi -e 's#\s*<!-- WC360_POST_EXPORT:firefox-webgl-context:start -->.*?<!-- WC360_POST_EXPORT:firefox-webgl-context:end -->##sg' "$INDEX_FILE"
 perl -0pi -e 's#\s*<!-- WC360_POST_EXPORT:mode:start -->.*?<!-- WC360_POST_EXPORT:mode:end -->##sg' "$INDEX_FILE"
 perl -0pi -e 's#\s*<!-- WC360_POST_EXPORT:responsive-menu:start -->.*?<!-- WC360_POST_EXPORT:responsive-menu:end -->##sg' "$INDEX_FILE"
