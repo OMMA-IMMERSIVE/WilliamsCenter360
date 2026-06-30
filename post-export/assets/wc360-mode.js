@@ -4,6 +4,7 @@
   var MODE_FULL = "full";
   var DEFAULT_START_BUTTON_ID = "Button_8ABCDA12_B819_62B3_41D2_F34BF4720F6A";
   var EXIT_BUTTON_ID = "Button_F8824518_B82E_A6BF_4198_E5695E18D1C4";
+  var DEFAULT_START_PLAYLIST_INDEX = 1;
   var FULL_MODE_HIDDEN_IDS = [
     "ViewerAreaLabeled_978428B3_B81B_AFF1_41E5_CAA80CE8B646",
     "ViewerAreaLabeled_978428B3_B81B_AFF1_41E5_CAA80CE8B646VideoPlayer",
@@ -20,6 +21,7 @@
     "Button_8B766281_B86A_A391_41E0_A89206234E13"
   ];
   var defaultStartApplied = false;
+  var defaultStartRetryTimer = null;
   var exitGuardTimer = null;
 
   var defaults = {
@@ -152,19 +154,45 @@
   }
 
   function applyDefaultStart() {
-    if (window.WC360_MODE !== MODE_FULL || defaultStartApplied) {
+    if (defaultStartApplied) {
       return false;
     }
 
     var atriumButton = getPlayerObject(DEFAULT_START_BUTTON_ID);
 
-    if (!atriumButton || !atriumButton.trigger) {
-      return false;
+    if (window.WC360_MODE === MODE_FULL && atriumButton && atriumButton.trigger) {
+      atriumButton.trigger("click");
     }
 
-    atriumButton.trigger("click");
+    if (window.tour && window.tour.player && window.tour.player.setPlayListSelectedIndex && window.tour.player.mainPlayList) {
+      window.tour.player.setPlayListSelectedIndex(window.tour.player.mainPlayList, DEFAULT_START_PLAYLIST_INDEX);
+    }
+
     defaultStartApplied = true;
     return true;
+  }
+
+  function scheduleDefaultStartRetry() {
+    var attempts = 0;
+
+    if (defaultStartRetryTimer) {
+      window.clearInterval(defaultStartRetryTimer);
+    }
+
+    defaultStartRetryTimer = window.setInterval(function () {
+      attempts += 1;
+
+      if (window.WC360_MODE !== MODE_FULL || defaultStartApplied) {
+        window.clearInterval(defaultStartRetryTimer);
+        defaultStartRetryTimer = null;
+        return;
+      }
+
+      if (applyDefaultStart() || attempts >= 20) {
+        window.clearInterval(defaultStartRetryTimer);
+        defaultStartRetryTimer = null;
+      }
+    }, 250);
   }
 
   function guardDefaultExitButton() {
@@ -208,6 +236,8 @@
           }
 
           window.WC360_MODE_READY = true;
+        } else {
+          scheduleDefaultStartRetry();
         }
       }
 

@@ -17,6 +17,7 @@
 
   var STEP_MS = 5000;
   var IDLE_RESTART_MS = 5000;
+  var INITIAL_START_MS = 0;
   var ACTIVE_COLOR = "#FFCC00";
   var INACTIVE_COLOR = "#FFFFFF";
   var cycleTimer = null;
@@ -56,34 +57,9 @@
     });
   }
 
-  function dispatchSyntheticUnhover(el) {
-    ["pointerout", "mouseout", "mouseleave"].forEach(function (type) {
-      var event;
-
-      try {
-        event = new MouseEvent(type, {
-          bubbles: type !== "mouseleave",
-          cancelable: true,
-          view: window
-        });
-      } catch (err) {
-        event = document.createEvent("MouseEvents");
-        event.initMouseEvent(type, type !== "mouseleave", true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-      }
-
-      el.dispatchEvent(event);
-    });
-  }
-
   function resetButton(id) {
     var object = getPlayerObject(id);
     var el = document.getElementById(id);
-
-    if (object && object.trigger) {
-      syntheticInteractionDepth += 1;
-      object.trigger("rollOut");
-      syntheticInteractionDepth -= 1;
-    }
 
     if (object && object.set) {
       object.set("fontColor", INACTIVE_COLOR);
@@ -92,9 +68,6 @@
     }
 
     if (el) {
-      syntheticInteractionDepth += 1;
-      dispatchSyntheticUnhover(el);
-      syntheticInteractionDepth -= 1;
       el.style.setProperty("color", INACTIVE_COLOR, "important");
       el.style.backgroundColor = "";
       el.style.removeProperty("background-color");
@@ -180,6 +153,10 @@
 
     nextItem();
     cycleTimer = window.setInterval(nextItem, STEP_MS);
+  }
+
+  function startInitialCycle() {
+    window.setTimeout(startCycle, INITIAL_START_MS);
   }
 
   function scheduleRestart() {
@@ -285,27 +262,7 @@
   }
 
   function getUserControlledButton() {
-    var focusedButton = getMenuButtonFromNode(document.activeElement);
-
-    if (focusedButton) {
-      return focusedButton;
-    }
-
-    for (var i = 0; i < MENU_BUTTON_IDS.length; i += 1) {
-      var el = document.getElementById(MENU_BUTTON_IDS[i]);
-
-      if (el && el.matches) {
-        try {
-          if (el.matches(":hover")) {
-            return el;
-          }
-        } catch (err) {
-          // Older embedded browsers may not support :hover in matches().
-        }
-      }
-    }
-
-    return null;
+    return userHoverId ? document.getElementById(userHoverId) : null;
   }
 
   function handleDelegatedEnter(event) {
@@ -418,7 +375,7 @@
         attachUserListeners();
         attachPlayerListeners();
         window.setInterval(attachPlayerListeners, 1000);
-        startCycle();
+        startInitialCycle();
       }
     }, 250);
   }

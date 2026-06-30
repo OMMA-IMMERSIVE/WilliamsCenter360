@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>WC360 Embedded Tour</title>
+    <title>WC360</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <style>
@@ -20,6 +20,117 @@
             display: block;
         }
     </style>
+    <script>
+        (function () {
+            var BUTTON_ROWS = [
+                {
+                    ids: [
+                        "Button_8ABCDA12_B819_62B3_41D2_F34BF4720F6A",
+                        "Button_8837140B_B819_A691_41D6_D10830F52B94",
+                        "Button_8BBB5CAA_B816_E793_41E3_F9F0F17FE658",
+                        "Button_8B39B0A2_B817_BF93_41D2_2E0DA94E8BC1",
+                        "Button_8E664C53_B839_66B1_41D7_09B458891924"
+                    ],
+                    edge: "top"
+                },
+                {
+                    ids: [
+                        "Button_8113E501_B81A_A691_41DA_96AE5D8E2D65",
+                        "Button_882A4B7A_B869_A173_41C0_87A6B9FAD535",
+                        "Button_8B766281_B86A_A391_41E0_A89206234E13",
+                        "Button_8AE011F6_B817_6173_41D7_7BD482325563"
+                    ],
+                    edge: "bottom"
+                }
+            ];
+
+            function setImportant(el, prop, value) {
+                if (el && el.style) {
+                    el.style.setProperty(prop, value, "important");
+                }
+            }
+
+            function apply(doc) {
+                if (!doc || !doc.getElementById) {
+                    return;
+                }
+
+                BUTTON_ROWS.forEach(function (row) {
+                    row.ids.forEach(function (id, index) {
+                        var el = doc.getElementById(id);
+                        var left = (index * 100 / row.ids.length) + "%";
+                        var width = (100 / row.ids.length) + "%";
+                        var top = row.edge === "top" ? "0" : "auto";
+                        var bottom = row.edge === "bottom" ? "0" : "auto";
+                        var parent = el ? el.parentElement : null;
+                        var depth = 0;
+
+                        while (parent && depth < 4) {
+                            setImportant(parent, "visibility", "visible");
+                            setImportant(parent, "opacity", "1");
+                            setImportant(parent, "display", "block");
+                            setImportant(parent, "overflow", "visible");
+                            parent = parent.parentElement;
+                            depth += 1;
+                        }
+
+                        if (!el) {
+                            return;
+                        }
+
+                        setImportant(el, "position", "absolute");
+                        setImportant(el, "left", left);
+                        setImportant(el, "right", "auto");
+                        setImportant(el, "top", top);
+                        setImportant(el, "bottom", bottom);
+                        setImportant(el, "width", width);
+                        setImportant(el, "height", "70px");
+                        setImportant(el, "display", "flex");
+                        setImportant(el, "align-items", "center");
+                        setImportant(el, "justify-content", "center");
+                        setImportant(el, "white-space", "nowrap");
+                        setImportant(el, "overflow", "hidden");
+                        setImportant(el, "text-overflow", "ellipsis");
+                        setImportant(el, "z-index", "20");
+                    });
+                });
+            }
+
+            function watchFrame(frame) {
+                var attempts = 0;
+                var timer = window.setInterval(function () {
+                    attempts += 1;
+                    try {
+                        apply(frame.contentDocument);
+                    } catch (err) {}
+
+                    if (attempts >= 120) {
+                        window.clearInterval(timer);
+                    }
+                }, 250);
+            }
+
+            function start() {
+                var frame = document.querySelector("iframe");
+
+                if (!frame) {
+                    return;
+                }
+
+                try {
+                    apply(frame.contentDocument);
+                } catch (err) {}
+
+                watchFrame(frame);
+            }
+
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", start, { once: true });
+            } else {
+                start();
+            }
+        })();
+    </script>
 </head>
 <body>
     <iframe

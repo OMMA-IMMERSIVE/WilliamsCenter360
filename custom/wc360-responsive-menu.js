@@ -51,6 +51,18 @@
     }
   }
 
+  function getRowContainer(node) {
+    var current = node;
+    var depth = 0;
+
+    while (current && depth < 4) {
+      current = current.parentElement;
+      depth += 1;
+    }
+
+    return current;
+  }
+
   function injectGridStyle() {
     var style = document.getElementById(STYLE_ID);
     var css = "";
@@ -102,6 +114,7 @@
 
   function applyButtonSlot(id, index, count, edge) {
     var el = document.getElementById(id);
+    var rowContainer = el ? getRowContainer(el) : null;
     var left = (index * 100 / count) + "%";
     var width = (100 / count) + "%";
     var fontSize = clamp(13, (window.innerWidth || 1280) * 0.018, 26) + "px";
@@ -136,6 +149,20 @@
     setImportant(el, "overflow", "hidden");
     setImportant(el, "text-overflow", "ellipsis");
     setImportant(el, "transform", "none");
+
+    if (rowContainer) {
+      setImportant(rowContainer, "position", "absolute");
+      setImportant(rowContainer, "left", "0");
+      setImportant(rowContainer, "right", "0");
+      setImportant(rowContainer, "top", edge === "top" ? "0" : "auto");
+      setImportant(rowContainer, "bottom", edge === "bottom" ? "0" : "auto");
+      setImportant(rowContainer, "width", "100%");
+      setImportant(rowContainer, "height", "70px");
+      setImportant(rowContainer, "display", "block");
+      setImportant(rowContainer, "visibility", "visible");
+      setImportant(rowContainer, "opacity", "1");
+      setImportant(rowContainer, "overflow", "visible");
+    }
   }
 
   function applyMenuGrid() {

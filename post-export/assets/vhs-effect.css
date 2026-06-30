@@ -1,5 +1,10 @@
 html.wc360-vhs-enabled,
 html.wc360-vhs-enabled body {
+  background-color: transparent;
+}
+
+html.wc360-vhs-enabled.wc360-vhs-active,
+html.wc360-vhs-enabled.wc360-vhs-active body {
   background-color: #000;
 }
 
@@ -15,6 +20,14 @@ html.wc360-vhs-enabled body {
   inset: 0;
   isolation: isolate;
   overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 120ms linear, visibility 120ms linear;
+}
+
+html.wc360-vhs-enabled.wc360-vhs-active .wc360-vhs-screen {
+  opacity: 1;
+  visibility: visible;
 }
 
 .wc360-vhs-screen.wc360-vhs-screen--fallback {
