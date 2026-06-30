@@ -17,6 +17,7 @@
 
   var STEP_MS = 5000;
   var IDLE_RESTART_MS = 5000;
+  var INITIAL_START_MS = 0;
   var ACTIVE_COLOR = "#FFCC00";
   var INACTIVE_COLOR = "#FFFFFF";
   var cycleTimer = null;
@@ -152,6 +153,10 @@
 
     nextItem();
     cycleTimer = window.setInterval(nextItem, STEP_MS);
+  }
+
+  function startInitialCycle() {
+    window.setTimeout(startCycle, INITIAL_START_MS);
   }
 
   function scheduleRestart() {
@@ -370,7 +375,7 @@
         attachUserListeners();
         attachPlayerListeners();
         window.setInterval(attachPlayerListeners, 1000);
-        startCycle();
+        startInitialCycle();
       }
     }, 250);
   }

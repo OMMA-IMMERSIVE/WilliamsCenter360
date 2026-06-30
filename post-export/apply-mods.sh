@@ -39,7 +39,7 @@ if [ "$EMBED_SOURCE" != "$EMBED_TARGET" ]; then
 fi
 perl -0pi -e 's#(\s*<script src="lib/tdvplayer\.js[^"]*"></script>)#\n    <!-- WC360_POST_EXPORT:firefox-webgl-context:start -->\n    <script src="custom/firefox-webgl-context.js"></script>\n    <!-- WC360_POST_EXPORT:firefox-webgl-context:end -->$1#s' "$INDEX_FILE"
 perl -0pi -e 's#(\s*<script src="script\.js[^"]*"></script>)#$1\n    <!-- WC360_POST_EXPORT:mode:start -->\n    <script src="custom/wc360-mode.js?v=14"></script>\n    <!-- WC360_POST_EXPORT:mode:end -->#s' "$INDEX_FILE"
-perl -0pi -e 's#(\s*<!-- WC360_POST_EXPORT:mode:end -->)#$1\n    <!-- WC360_POST_EXPORT:menu-autocycle:start -->\n    <script src="custom/wc360-menu-autocycle.js?v=10"></script>\n    <!-- WC360_POST_EXPORT:menu-autocycle:end -->#s' "$INDEX_FILE"
+perl -0pi -e 's#(\s*<!-- WC360_POST_EXPORT:mode:end -->)#$1\n    <!-- WC360_POST_EXPORT:menu-autocycle:start -->\n    <script src="custom/wc360-menu-autocycle.js?v=11"></script>\n    <!-- WC360_POST_EXPORT:menu-autocycle:end -->#s' "$INDEX_FILE"
 perl -0pi -e 's#(\s*<!-- WC360_POST_EXPORT:menu-autocycle:end -->)#$1\n    <!-- WC360_POST_EXPORT:responsive-menu:start -->\n    <script src="custom/wc360-responsive-menu.js?v=2"></script>\n    <!-- WC360_POST_EXPORT:responsive-menu:end -->#s' "$INDEX_FILE"
 
 echo "Applied WC360 post-export modifications to $EXPORT_DIR"
