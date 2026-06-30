@@ -3,3 +3,9 @@
   to = "/embed/index.htm"
   status = 200
   force = true
+
+[[redirects]]
+  from = "/embed/"
+  to = "/embed/index.htm"
+  status = 200
+  force = true
