@@ -12,10 +12,10 @@
   ];
 
   var BOTTOM_GRID_IDS = [
-    "Button_8113E501_B81A_A691_41DA_96AE5D8E2D65",
+    "Button_8AE011F6_B817_6173_41D7_7BD482325563",
     "Button_882A4B7A_B869_A173_41C0_87A6B9FAD535",
     "Button_8B766281_B86A_A391_41E0_A89206234E13",
-    "Button_8AE011F6_B817_6173_41D7_7BD482325563"
+    "Button_8113E501_B81A_A691_41DA_96AE5D8E2D65"
   ];
 
   var MENU_ROWS = [
@@ -24,6 +24,9 @@
   ];
 
   var STYLE_ID = "wc360-menu-grid-style";
+  var EXTERIOR_BUTTON_ID = "Button_8113E501_B81A_A691_41DA_96AE5D8E2D65";
+  var EXTERIOR_BACKGROUND = "#999999";
+  var EXTERIOR_COLOR = "#000000";
 
   function clamp(min, value, max) {
     return Math.min(Math.max(value, min), max);
@@ -49,6 +52,26 @@
     if (el && el.style) {
       el.style.setProperty(prop, value, "important");
     }
+  }
+
+  function applyExteriorStyle(el) {
+    if (!el) {
+      return;
+    }
+
+    setPlayerValue(EXTERIOR_BUTTON_ID, "fontColor", EXTERIOR_COLOR);
+    setPlayerValue(EXTERIOR_BUTTON_ID, "rollOverFontColor", EXTERIOR_COLOR);
+    setPlayerValue(EXTERIOR_BUTTON_ID, "backgroundOpacity", 1);
+    setPlayerValue(EXTERIOR_BUTTON_ID, "rollOverBackgroundOpacity", 1);
+    setImportant(el, "background-color", EXTERIOR_BACKGROUND);
+    setImportant(el, "color", EXTERIOR_COLOR);
+    setImportant(el, "text-shadow", "none");
+
+    Array.prototype.forEach.call(el.querySelectorAll("*"), function (child) {
+      setImportant(child, "background-color", EXTERIOR_BACKGROUND);
+      setImportant(child, "color", EXTERIOR_COLOR);
+      setImportant(child, "text-shadow", "none");
+    });
   }
 
   function getRowContainer(node) {
@@ -109,6 +132,19 @@
       });
     });
 
+    css += [
+      "#" + EXTERIOR_BUTTON_ID + " {",
+      "background-color: " + EXTERIOR_BACKGROUND + " !important;",
+      "color: " + EXTERIOR_COLOR + " !important;",
+      "text-shadow: none !important;",
+      "}",
+      "#" + EXTERIOR_BUTTON_ID + " * {",
+      "background-color: " + EXTERIOR_BACKGROUND + " !important;",
+      "color: " + EXTERIOR_COLOR + " !important;",
+      "text-shadow: none !important;",
+      "}"
+    ].join("\n") + "\n";
+
     style.textContent = css;
   }
 
@@ -149,6 +185,10 @@
     setImportant(el, "overflow", "hidden");
     setImportant(el, "text-overflow", "ellipsis");
     setImportant(el, "transform", "none");
+
+    if (id === EXTERIOR_BUTTON_ID) {
+      applyExteriorStyle(el);
+    }
 
     if (rowContainer) {
       setImportant(rowContainer, "position", "absolute");

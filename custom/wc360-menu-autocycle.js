@@ -18,8 +18,11 @@
   var STEP_MS = 5000;
   var IDLE_RESTART_MS = 5000;
   var INITIAL_START_MS = 0;
+  var EXTERIOR_BUTTON_ID = "Button_8113E501_B81A_A691_41DA_96AE5D8E2D65";
   var ACTIVE_COLOR = "#FFCC00";
   var INACTIVE_COLOR = "#FFFFFF";
+  var EXTERIOR_COLOR = "#000000";
+  var EXTERIOR_BACKGROUND = "#999999";
   var cycleTimer = null;
   var idleTimer = null;
   var currentIndex = -1;
@@ -36,6 +39,36 @@
     }
 
     return window.tour.player.getById(id);
+  }
+
+  function setImportant(el, prop, value) {
+    if (el && el.style) {
+      el.style.setProperty(prop, value, "important");
+    }
+  }
+
+  function ensureExteriorStyle() {
+    var object = getPlayerObject(EXTERIOR_BUTTON_ID);
+    var el = document.getElementById(EXTERIOR_BUTTON_ID);
+
+    if (object && object.set) {
+      object.set("fontColor", EXTERIOR_COLOR);
+      object.set("rollOverFontColor", EXTERIOR_COLOR);
+      object.set("backgroundOpacity", 1);
+      object.set("rollOverBackgroundOpacity", 1);
+    }
+
+    if (el) {
+      setImportant(el, "background-color", EXTERIOR_BACKGROUND);
+      setImportant(el, "color", EXTERIOR_COLOR);
+      setImportant(el, "text-shadow", "none");
+
+      Array.prototype.forEach.call(el.querySelectorAll("*"), function (child) {
+        setImportant(child, "background-color", EXTERIOR_BACKGROUND);
+        setImportant(child, "color", EXTERIOR_COLOR);
+        setImportant(child, "text-shadow", "none");
+      });
+    }
   }
 
   function dispatchSyntheticHover(el) {
@@ -60,6 +93,11 @@
   function resetButton(id) {
     var object = getPlayerObject(id);
     var el = document.getElementById(id);
+
+    if (id === EXTERIOR_BUTTON_ID) {
+      ensureExteriorStyle();
+      return;
+    }
 
     if (object && object.set) {
       object.set("fontColor", INACTIVE_COLOR);
@@ -95,8 +133,8 @@
     resetButtonsExcept(id);
 
     if (object && object.set) {
-      object.set("fontColor", INACTIVE_COLOR);
-      object.set("rollOverFontColor", ACTIVE_COLOR);
+      object.set("fontColor", id === EXTERIOR_BUTTON_ID ? EXTERIOR_COLOR : INACTIVE_COLOR);
+      object.set("rollOverFontColor", id === EXTERIOR_BUTTON_ID ? EXTERIOR_COLOR : ACTIVE_COLOR);
     }
 
     if (object && object.trigger) {
@@ -109,11 +147,20 @@
       syntheticInteractionDepth += 1;
       dispatchSyntheticHover(el);
       syntheticInteractionDepth -= 1;
-      el.style.setProperty("color", ACTIVE_COLOR, "important");
 
-      Array.prototype.forEach.call(el.querySelectorAll("*"), function (child) {
-        child.style.setProperty("color", ACTIVE_COLOR, "important");
-      });
+      if (id === EXTERIOR_BUTTON_ID) {
+        ensureExteriorStyle();
+      } else {
+        el.style.setProperty("color", ACTIVE_COLOR, "important");
+
+        Array.prototype.forEach.call(el.querySelectorAll("*"), function (child) {
+          child.style.setProperty("color", ACTIVE_COLOR, "important");
+        });
+      }
+    }
+
+    if (id === EXTERIOR_BUTTON_ID) {
+      ensureExteriorStyle();
     }
 
     activeAutocycleId = id;
@@ -374,6 +421,8 @@
         window.clearInterval(timer);
         attachUserListeners();
         attachPlayerListeners();
+        ensureExteriorStyle();
+        window.setInterval(ensureExteriorStyle, 500);
         window.setInterval(attachPlayerListeners, 1000);
         startInitialCycle();
       }
